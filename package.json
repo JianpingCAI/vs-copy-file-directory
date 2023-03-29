@@ -10,6 +10,14 @@
   "categories": [
     "Other"
   ],
+  "homepage": "https://github.com/JianpingCAI/vs-copy-file-directory/blob/master/README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JianpingCAI/vs-copy-file-directory.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JianpingCAI/vs-copy-file-directory/issues"
+  },
   "activationEvents": [
   ],
   "main": "./out/extension.js",
