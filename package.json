@@ -2,7 +2,7 @@
   "name": "copy-directory-path",
   "displayName": "copy directory path",
   "description": "A simple extension to copy the directory path of the current file",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "jianping",
   "engines": {
     "vscode": "^1.76.0"
@@ -28,12 +28,22 @@
         "key": "ctrl+alt+d",
         "mac": "cmd+alt+d",
         "when": "editorTextFocus"
+      },
+      {
+        "command": "copy-file-directory.copyRelativeFileDirectory",
+        "key": "ctrl+alt+r",
+        "mac": "cmd+alt+r",
+        "when": "editorTextFocus"
       }
     ],
     "commands": [
       {
         "command": "copy-file-directory.copyFileDirectory",
         "title": "Copy File Directory"
+      } ,
+      {
+        "command": "copy-file-directory.copyRelativeFileDirectory",
+        "title": "Copy File Relative Directory"
       }     
     ],
     "menus": {
@@ -41,12 +51,20 @@
         {
           "command": "copy-file-directory.copyFileDirectory",
           "group": "1_cutcopypaste@10"
+        },
+        {
+          "command": "copy-file-directory.copyRelativeFileDirectory",
+          "group": "1_cutcopypaste@11"
         }
       ],
       "explorer/context": [
         {
           "command": "copy-file-directory.copyFileDirectory",
           "group": "6_copypath@100"
+        },
+        {
+          "command": "copy-file-directory.copyRelativeFileDirectory",
+          "group": "6_copypath@101"
         }
       ]
     }
