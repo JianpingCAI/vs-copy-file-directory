@@ -2,7 +2,7 @@
   "name": "copy-directory-path",
   "displayName": "copy directory path",
   "description": "A simple extension to copy the directory path of the current file",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "jianping",
   "engines": {
     "vscode": "^1.76.0"
@@ -18,11 +18,22 @@
   "bugs": {
     "url": "https://github.com/JianpingCAI/vs-copy-file-directory/issues"
   },
-  "activationEvents": [
-  ],
+  "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
     "keybindings": [
+      {
+        "command": "copy-file-directory.copyFilePath",
+        "key": "ctrl+alt+f",
+        "mac": "cmd+alt+f",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "copy-file-directory.copyFileRelativePath",
+        "key": "ctrl+alt+p",
+        "mac": "cmd+alt+p",
+        "when": "editorTextFocus"
+      },
       {
         "command": "copy-file-directory.copyFileDirectory",
         "key": "ctrl+alt+d",
@@ -34,37 +45,93 @@
         "key": "ctrl+alt+r",
         "mac": "cmd+alt+r",
         "when": "editorTextFocus"
+      },
+      {
+        "command": "copy-file-directory.copyFileName",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "copy-file-directory.copyFileNameWithExtension",
+        "when": "editorTextFocus"
       }
     ],
     "commands": [
       {
+        "command": "copy-file-directory.copyFilePath",
+        "title": "Copy File Path"
+      },
+      {
+        "command": "copy-file-directory.copyFileRelativePath",
+        "title": "Copy File Relative Path"
+      },
+      {
         "command": "copy-file-directory.copyFileDirectory",
         "title": "Copy File Directory"
-      } ,
+      },
       {
         "command": "copy-file-directory.copyRelativeFileDirectory",
         "title": "Copy File Relative Directory"
-      }     
+      },
+      {
+        "command": "copy-file-directory.copyFileName",
+        "title": "Copy File Name"
+      },
+      {
+        "command": "copy-file-directory.copyFileNameWithExtension",
+        "title": "Copy File Name & Extension"
+      }
     ],
     "menus": {
       "editor/title/context": [
         {
+          "command": "copy-file-directory.copyFilePath",
+          "group": "1_cutcopypaste@1"
+        },
+        {
+          "command": "copy-file-directory.copyFileRelativePath",
+          "group": "1_cutcopypaste@2"
+        },
+        {
           "command": "copy-file-directory.copyFileDirectory",
-          "group": "1_cutcopypaste@10"
+          "group": "1_cutcopypaste@3"
         },
         {
           "command": "copy-file-directory.copyRelativeFileDirectory",
-          "group": "1_cutcopypaste@11"
+          "group": "1_cutcopypaste@4"
+        },
+        {
+          "command": "copy-file-directory.copyFileName",
+          "group": "1_cutcopypaste@5"
+        },
+        {
+          "command": "copy-file-directory.copyFileNameWithExtension",
+          "group": "1_cutcopypaste@6"
         }
       ],
       "explorer/context": [
         {
+          "command": "copy-file-directory.copyFilePath",
+          "group": "6_copypath@1"
+        },
+        {
+          "command": "copy-file-directory.copyFileRelativePath",
+          "group": "6_copypath@2"
+        },
+        {
           "command": "copy-file-directory.copyFileDirectory",
-          "group": "6_copypath@100"
+          "group": "6_copypath@3"
         },
         {
           "command": "copy-file-directory.copyRelativeFileDirectory",
-          "group": "6_copypath@101"
+          "group": "6_copypath@4"
+        },
+        {
+          "command": "copy-file-directory.copyFileName",
+          "group": "6_copypath@5"
+        },
+        {
+          "command": "copy-file-directory.copyFileNameWithExtension",
+          "group": "6_copypath@6"
         }
       ]
     }
