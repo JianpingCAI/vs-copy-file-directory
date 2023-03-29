@@ -1,0 +1,67 @@
+{
+  "name": "copy-directory-path",
+  "displayName": "copy directory path",
+  "description": "A simple extension to copy the directory path of the current file",
+  "version": "0.0.1",
+  "publisher": "jianping",
+  "engines": {
+    "vscode": "^1.76.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "keybindings": [
+      {
+        "command": "copy-file-directory.copyFileDirectory",
+        "key": "ctrl+alt+d",
+        "mac": "cmd+alt+d",
+        "when": "editorTextFocus"
+      }
+    ],
+    "commands": [
+      {
+        "command": "copy-file-directory.copyFileDirectory",
+        "title": "Copy File Directory"
+      }     
+    ],
+    "menus": {
+      "editor/title/context": [
+        {
+          "command": "copy-file-directory.copyFileDirectory",
+          "group": "1_cutcopypaste@10"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "copy-file-directory.copyFileDirectory",
+          "group": "6_copypath@100"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.76.0",
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "16.x",
+    "@typescript-eslint/eslint-plugin": "^5.53.0",
+    "@typescript-eslint/parser": "^5.53.0",
+    "eslint": "^8.34.0",
+    "glob": "^8.1.0",
+    "mocha": "^10.2.0",
+    "typescript": "^4.9.5",
+    "@vscode/test-electron": "^2.2.3"
+  }
+}
