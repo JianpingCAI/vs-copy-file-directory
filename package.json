@@ -1,6 +1,6 @@
 {
   "name": "copy-directory-path",
-  "displayName": "copy directory path",
+  "displayName": "Copy File Info",
   "description": "A simple extension to copy the directory path of the current file",
   "version": "0.0.3",
   "publisher": "jianping",
