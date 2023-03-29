@@ -1,9 +1,9 @@
 {
-  "name": "copy-directory-path",
+  "name": "copy-file-info",
   "displayName": "Copy File Info",
   "description": "A simple extension to copy the directory path of the current file",
   "version": "0.0.3",
-  "publisher": "jianping",
+  "publisher": "JianpingCai",
   "engines": {
     "vscode": "^1.76.0"
   },
