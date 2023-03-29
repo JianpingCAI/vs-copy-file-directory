@@ -22,7 +22,8 @@ let getFileRelativeDirectory = function (): string | null {
 		if (workspaceFolder) {
 			const workspaceFolderPath = workspaceFolder.uri.fsPath;
 			const activeDocumentPath = activeDocument.fileName;
-			const relativePath = path.relative(workspaceFolderPath, activeDocumentPath);
+			const fileDir = path.dirname(activeDocumentPath);
+			const relativePath = path.relative(workspaceFolderPath, fileDir);
 			return relativePath;
 		}
 	}
