@@ -1,6 +1,6 @@
-# copy-directory-path README
+# copy-file-info README
 
-Copies the directory path of the currently active file to the clipboard.
+Copies path info of the currently active file to the clipboard.
 
 ## Features
 
@@ -14,6 +14,14 @@ This extension provides six different commands for copying file-related informat
 6. **Copy Relative File Directory**: Copies the relative directory path of the active file with respect to the workspace folder.
 
 The extension also provides feedback by displaying a status bar message when the selected information is successfully copied to the clipboard.
+
+- From Title Context Menu
+
+    ![Commands](images/title_context_menu.png)
+
+- From Context Menu
+
+    ![Commands](images/context_menu.png)
 
 ## Requirements
 
