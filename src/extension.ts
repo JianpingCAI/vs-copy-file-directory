@@ -45,8 +45,8 @@ export function activate(context: vscode.ExtensionContext): void {
 
 	// Register command: Copy File Relative Path
 	disposable = vscode.commands.registerCommand('copy-file-directory.copyFileRelativePath', async (...args) => {
-		const fileRelativePath = utils.getFileRelativePath();
-		if (fileRelativePath) {
+		const fileRelativePath = utils.getFileRelativePath(args);
+		if (fileRelativePath !== null) {
 			await utils.copyToClipboardWithFeedback(fileRelativePath, 'Relative file path');
 		} else {
 			utils.handleFileOperationError('copy relative file path');
@@ -66,9 +66,9 @@ export function activate(context: vscode.ExtensionContext): void {
 	context.subscriptions.push(disposable);
 
 	// Register command: Copy Relative File Directory
-	disposable = vscode.commands.registerCommand('copy-file-directory.copyRelativeFileDirectory', async () => {
-		const relativeDirectory = utils.getFileRelativeDirectory();
-		if (relativeDirectory) {
+	disposable = vscode.commands.registerCommand('copy-file-directory.copyRelativeFileDirectory', async (...args) => {
+		const relativeDirectory = utils.getFileRelativeDirectory(args);
+		if (relativeDirectory !== null) {
 			await utils.copyToClipboardWithFeedback(relativeDirectory, 'Relative directory');
 		} else {
 			utils.handleFileOperationError('copy relative directory');

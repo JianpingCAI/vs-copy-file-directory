@@ -33,25 +33,30 @@ export function getFilePath(args: vscode.Uri[]): string | null {
 
 /**
  * Retrieves the relative file path of the active document with respect to the workspace folder
+ * @param args - Optional array of URI objects from VS Code context menu or command palette
  * @returns The relative path from the workspace root to the file, or null if no workspace or file is active
  * @throws Error if unable to determine relative path
  */
-export function getFileRelativePath(): string | null {
+export function getFileRelativePath(args?: vscode.Uri[]): string | null {
 	try {
-		const activeDocument = vscode.window.activeTextEditor?.document;
-		if (!activeDocument) {
+		// Get file path from args or active editor
+		const filePath = getFilePath(args || []);
+		if (!filePath) {
 			return null;
 		}
 
-		const workspaceFolder = vscode.workspace.getWorkspaceFolder(activeDocument.uri);
+		// Get workspace folder for the file
+		const fileUri = vscode.Uri.file(filePath);
+		const workspaceFolder = vscode.workspace.getWorkspaceFolder(fileUri);
 		if (!workspaceFolder) {
 			return null;
 		}
 
 		const workspaceFolderPath = workspaceFolder.uri.fsPath;
-		const activeDocumentPath = activeDocument.fileName;
-		const relativePath = path.relative(workspaceFolderPath, activeDocumentPath);
+		const relativePath = path.relative(workspaceFolderPath, filePath);
 		
+		// path.relative returns empty string if paths are the same
+		// Return the relative path (empty string is valid - means workspace root)
 		return relativePath;
 	} catch (error) {
 		console.error('Error getting relative file path:', error);
@@ -81,27 +86,32 @@ export function getFileDirectory(args: vscode.Uri[]): string | null {
 
 /**
  * Retrieves the relative directory path of the active document with respect to the workspace folder
+ * @param args - Optional array of URI objects from VS Code context menu or command palette
  * @returns The relative path from the workspace root to the file's directory, or null if no workspace or file is active
  * @throws Error if unable to determine relative directory path
  */
-export function getFileRelativeDirectory(): string | null {
+export function getFileRelativeDirectory(args?: vscode.Uri[]): string | null {
 	try {
-		const activeDocument = vscode.window.activeTextEditor?.document;
-		if (!activeDocument) {
+		// Get file path from args or active editor
+		const filePath = getFilePath(args || []);
+		if (!filePath) {
 			return null;
 		}
 
-		const workspaceFolder = vscode.workspace.getWorkspaceFolder(activeDocument.uri);
+		// Get workspace folder for the file
+		const fileUri = vscode.Uri.file(filePath);
+		const workspaceFolder = vscode.workspace.getWorkspaceFolder(fileUri);
 		if (!workspaceFolder) {
 			return null;
 		}
 
 		const workspaceFolderPath = workspaceFolder.uri.fsPath;
-		const activeDocumentPath = activeDocument.fileName;
-		const fileDir = path.dirname(activeDocumentPath);
+		const fileDir = path.dirname(filePath);
 		const relativePath = path.relative(workspaceFolderPath, fileDir);
 		
-		return relativePath;
+		// path.relative returns empty string when paths are identical (file in workspace root)
+		// Return '.' to represent current directory instead of empty string
+		return (relativePath === '' || relativePath === '.') ? '.' : relativePath;
 	} catch (error) {
 		console.error('Error getting relative file directory:', error);
 		return null;
@@ -128,7 +138,7 @@ export function getFileNameWithExtension(filePath: string): string {
 }
 
 /**
- * Copies the provided message to the clipboard and displays a status bar notification
+ * Copies the provided message to the clipboard and displays a popup notification
  * @param msg - The text to copy to the clipboard
  * @param itemType - The type of item being copied (for the message)
  * @returns Promise that resolves when the operation is complete
@@ -136,7 +146,7 @@ export function getFileNameWithExtension(filePath: string): string {
 export async function copyToClipboardWithFeedback(msg: string, itemType: string = 'file information'): Promise<void> {
 	try {
 		await vscode.env.clipboard.writeText(msg);
-		vscode.window.setStatusBarMessage(`✓ ${itemType} "${msg}" copied to clipboard`, 3000);
+		vscode.window.showInformationMessage(`✓ ${itemType} "${msg}" copied to clipboard`);
 	} catch (error) {
 		const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 		vscode.window.showErrorMessage(`Failed to copy to clipboard: ${errorMessage}`);
