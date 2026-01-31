@@ -1,10 +1,14 @@
-'use strict';
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import * as path from 'path';
 
-let getFilePath = function (args: vscode.Uri[]): string | null {
+/**
+ * Retrieves the file path from the provided URI arguments or the active text editor
+ * @param args - Array of URI objects from VS Code context menu or command palette
+ * @returns The file system path of the file, or null if no file is available
+ */
+const getFilePath = function (args: vscode.Uri[]): string | null {
 	let filePath = null;
 	if (args && args.length > 0) {
 		filePath = args[0].fsPath;
@@ -15,7 +19,11 @@ let getFilePath = function (args: vscode.Uri[]): string | null {
 	return filePath;
 };
 
-let getFileRelativePath = function (): string | null {
+/**
+ * Retrieves the relative file path of the active document with respect to the workspace folder
+ * @returns The relative path from the workspace root to the file, or null if no workspace or file is active
+ */
+const getFileRelativePath = function (): string | null {
 	const activeDocument = vscode.window.activeTextEditor?.document;
 	if (activeDocument) {
 		const workspaceFolder = vscode.workspace.getWorkspaceFolder(activeDocument.uri);
@@ -29,7 +37,12 @@ let getFileRelativePath = function (): string | null {
 	return null;
 };
 
-let getFileDirectory = function (args: vscode.Uri[]): string | null {
+/**
+ * Retrieves the file path (note: duplicate of getFilePath - consider consolidation)
+ * @param args - Array of URI objects from VS Code context menu or command palette
+ * @returns The file system path of the file, or null if no file is available
+ */
+const getFileDirectory = function (args: vscode.Uri[]): string | null {
 	let filePath = null;
 	if (args && args.length > 0) {
 		filePath = args[0].fsPath;
@@ -40,7 +53,11 @@ let getFileDirectory = function (args: vscode.Uri[]): string | null {
 	return filePath;
 };
 
-let getFileRelativeDirectory = function (): string | null {
+/**
+ * Retrieves the relative directory path of the active document with respect to the workspace folder
+ * @returns The relative path from the workspace root to the file's directory, or null if no workspace or file is active
+ */
+const getFileRelativeDirectory = function (): string | null {
 	const activeDocument = vscode.window.activeTextEditor?.document;
 	if (activeDocument) {
 		const workspaceFolder = vscode.workspace.getWorkspaceFolder(activeDocument.uri);
@@ -55,18 +72,25 @@ let getFileRelativeDirectory = function (): string | null {
 	return null;
 };
 
-
-let pasteAndShowMessage = function (msg: string) {
+/**
+ * Copies the provided message to the clipboard and displays a status bar notification
+ * @param msg - The text to copy to the clipboard
+ */
+const pasteAndShowMessage = function (msg: string): void {
 	vscode.env.clipboard.writeText(msg);
 	vscode.window.setStatusBarMessage(`The file directory "${msg}" was copied to the clipboard.`, 3000);
 };
 
-export function activate(context: vscode.ExtensionContext) {
+/**
+ * Activates the extension and registers all commands
+ * @param context - The extension context provided by VS Code
+ */
+export function activate(context: vscode.ExtensionContext): void {
 	let disposable = vscode.commands.registerCommand('copy-file-directory.copyFileName', (...args) => {
 		const fullPath = getFilePath(args);
 		if (fullPath) {
-			let extName = path.extname(fullPath);
-            var fileName = path.basename(fullPath, extName);
+			const extName = path.extname(fullPath);
+			const fileName = path.basename(fullPath, extName);
 			pasteAndShowMessage(fileName);
 		}
 	});
@@ -117,6 +141,9 @@ export function activate(context: vscode.ExtensionContext) {
 
 }
 
-// this method is called when your extension is deactivated
-export function deactivate() {
+/**
+ * Deactivates the extension and performs cleanup
+ * Called when the extension is deactivated by VS Code
+ */
+export function deactivate(): void {
 }
