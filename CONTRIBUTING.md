@@ -36,17 +36,20 @@ This project adheres to a code of conduct that we expect all contributors to fol
 ### Installation
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/JianpingCAI/vs-copy-file-directory.git
    cd vs-copy-file-directory
    ```
 
 2. Install dependencies:
+
    ```bash
    npm install
    ```
 
 3. Open the project in VS Code:
+
    ```bash
    code .
    ```
@@ -69,6 +72,7 @@ This project adheres to a code of conduct that we expect all contributors to fol
 ### Branch Naming
 
 Use descriptive branch names:
+
 - `feature/add-custom-formats` - for new features
 - `fix/clipboard-error` - for bug fixes
 - `docs/update-readme` - for documentation updates
@@ -77,6 +81,7 @@ Use descriptive branch names:
 ### Commit Messages
 
 Write clear, descriptive commit messages:
+
 - Use present tense ("Add feature" not "Added feature")
 - Use imperative mood ("Move cursor to..." not "Moves cursor to...")
 - Start with a capital letter
@@ -84,6 +89,7 @@ Write clear, descriptive commit messages:
 - Add detailed description after a blank line if needed
 
 Examples:
+
 ```
 Add support for copying multiple file paths
 
