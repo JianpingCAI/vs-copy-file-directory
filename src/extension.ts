@@ -1,144 +1,80 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import * as path from 'path';
-
-/**
- * Retrieves the file path from the provided URI arguments or the active text editor
- * @param args - Array of URI objects from VS Code context menu or command palette
- * @returns The file system path of the file, or null if no file is available
- */
-const getFilePath = function (args: vscode.Uri[]): string | null {
-	let filePath = null;
-	if (args && args.length > 0) {
-		filePath = args[0].fsPath;
-	}
-	if (!filePath) {
-		filePath = vscode.window.activeTextEditor?.document.fileName || null;
-	}
-	return filePath;
-};
-
-/**
- * Retrieves the relative file path of the active document with respect to the workspace folder
- * @returns The relative path from the workspace root to the file, or null if no workspace or file is active
- */
-const getFileRelativePath = function (): string | null {
-	const activeDocument = vscode.window.activeTextEditor?.document;
-	if (activeDocument) {
-		const workspaceFolder = vscode.workspace.getWorkspaceFolder(activeDocument.uri);
-		if (workspaceFolder) {
-			const workspaceFolderPath = workspaceFolder.uri.fsPath;
-			const activeDocumentPath = activeDocument.fileName;
-			const relativePath = path.relative(workspaceFolderPath, activeDocumentPath);
-			return relativePath;
-		}
-	}
-	return null;
-};
-
-/**
- * Retrieves the file path (note: duplicate of getFilePath - consider consolidation)
- * @param args - Array of URI objects from VS Code context menu or command palette
- * @returns The file system path of the file, or null if no file is available
- */
-const getFileDirectory = function (args: vscode.Uri[]): string | null {
-	let filePath = null;
-	if (args && args.length > 0) {
-		filePath = args[0].fsPath;
-	}
-	if (!filePath) {
-		filePath = vscode.window.activeTextEditor?.document.fileName || null;
-	}
-	return filePath;
-};
-
-/**
- * Retrieves the relative directory path of the active document with respect to the workspace folder
- * @returns The relative path from the workspace root to the file's directory, or null if no workspace or file is active
- */
-const getFileRelativeDirectory = function (): string | null {
-	const activeDocument = vscode.window.activeTextEditor?.document;
-	if (activeDocument) {
-		const workspaceFolder = vscode.workspace.getWorkspaceFolder(activeDocument.uri);
-		if (workspaceFolder) {
-			const workspaceFolderPath = workspaceFolder.uri.fsPath;
-			const activeDocumentPath = activeDocument.fileName;
-			const fileDir = path.dirname(activeDocumentPath);
-			const relativePath = path.relative(workspaceFolderPath, fileDir);
-			return relativePath;
-		}
-	}
-	return null;
-};
-
-/**
- * Copies the provided message to the clipboard and displays a status bar notification
- * @param msg - The text to copy to the clipboard
- */
-const pasteAndShowMessage = function (msg: string): void {
-	vscode.env.clipboard.writeText(msg);
-	vscode.window.setStatusBarMessage(`The file directory "${msg}" was copied to the clipboard.`, 3000);
-};
+import * as utils from './utils/filePathUtils';
 
 /**
  * Activates the extension and registers all commands
  * @param context - The extension context provided by VS Code
  */
 export function activate(context: vscode.ExtensionContext): void {
-	let disposable = vscode.commands.registerCommand('copy-file-directory.copyFileName', (...args) => {
-		const fullPath = getFilePath(args);
+	// Register command: Copy File Name (without extension)
+	let disposable = vscode.commands.registerCommand('copy-file-directory.copyFileName', async (...args) => {
+		const fullPath = utils.getFilePath(args);
 		if (fullPath) {
-			const extName = path.extname(fullPath);
-			const fileName = path.basename(fullPath, extName);
-			pasteAndShowMessage(fileName);
+			const fileName = utils.getFileName(fullPath);
+			await utils.copyToClipboardWithFeedback(fileName, 'File name');
+		} else {
+			utils.handleFileOperationError('copy file name');
 		}
 	});
 	context.subscriptions.push(disposable);
 
-	disposable = vscode.commands.registerCommand('copy-file-directory.copyFileNameWithExtension', (...args) => {
-		const fullPath = getFilePath(args);
+	// Register command: Copy File Name with Extension
+	disposable = vscode.commands.registerCommand('copy-file-directory.copyFileNameWithExtension', async (...args) => {
+		const fullPath = utils.getFilePath(args);
 		if (fullPath) {
-			let fileName = path.basename(fullPath);
-			pasteAndShowMessage(fileName);
+			const fileName = utils.getFileNameWithExtension(fullPath);
+			await utils.copyToClipboardWithFeedback(fileName, 'File name');
+		} else {
+			utils.handleFileOperationError('copy file name');
 		}
 	});
 	context.subscriptions.push(disposable);
 
-	
-	disposable = vscode.commands.registerCommand('copy-file-directory.copyFilePath', (...args) => {
-		const filePath = getFilePath(args);
+	// Register command: Copy File Path (absolute)
+	disposable = vscode.commands.registerCommand('copy-file-directory.copyFilePath', async (...args) => {
+		const filePath = utils.getFilePath(args);
 		if (filePath) {
-			pasteAndShowMessage(filePath);
+			await utils.copyToClipboardWithFeedback(filePath, 'File path');
+		} else {
+			utils.handleFileOperationError('copy file path');
 		}
 	});
 	context.subscriptions.push(disposable);
 
-	disposable = vscode.commands.registerCommand('copy-file-directory.copyFileRelativePath', (...args) => {
-		const fileRelativePath = getFileRelativePath();
+	// Register command: Copy File Relative Path
+	disposable = vscode.commands.registerCommand('copy-file-directory.copyFileRelativePath', async (...args) => {
+		const fileRelativePath = utils.getFileRelativePath();
 		if (fileRelativePath) {
-			pasteAndShowMessage(fileRelativePath);
+			await utils.copyToClipboardWithFeedback(fileRelativePath, 'Relative file path');
+		} else {
+			utils.handleFileOperationError('copy relative file path');
 		}
 	});
 	context.subscriptions.push(disposable);
 
-	disposable = vscode.commands.registerCommand('copy-file-directory.copyFileDirectory', (...args) => {
-		const fullPath = getFileDirectory(args);
-		if (fullPath) {
-			const fileDir = path.dirname(fullPath);
-			pasteAndShowMessage(fileDir);
+	// Register command: Copy File Directory (absolute)
+	disposable = vscode.commands.registerCommand('copy-file-directory.copyFileDirectory', async (...args) => {
+		const fileDir = utils.getFileDirectory(args);
+		if (fileDir) {
+			await utils.copyToClipboardWithFeedback(fileDir, 'File directory');
+		} else {
+			utils.handleFileOperationError('copy file directory');
 		}
 	});
 	context.subscriptions.push(disposable);
 
-	disposable = vscode.commands.registerCommand('copy-file-directory.copyRelativeFileDirectory', () => {
-		const relativeDirectory = getFileRelativeDirectory();
+	// Register command: Copy Relative File Directory
+	disposable = vscode.commands.registerCommand('copy-file-directory.copyRelativeFileDirectory', async () => {
+		const relativeDirectory = utils.getFileRelativeDirectory();
 		if (relativeDirectory) {
-			pasteAndShowMessage(relativeDirectory);
+			await utils.copyToClipboardWithFeedback(relativeDirectory, 'Relative directory');
+		} else {
+			utils.handleFileOperationError('copy relative directory');
 		}
 	});
 	context.subscriptions.push(disposable);
-
 }
 
 /**
